@@ -1,8 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="intensive4sem"
+        android:label="quest_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.yandex.mapkit.API_KEY" android:value="452a550e-cf0b-48d6-97dd-a23ba02e2152"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
