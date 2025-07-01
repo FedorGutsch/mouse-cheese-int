@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quest_app/bloc/quest_bloc.dart';
-import 'package:quest_app/bloc/quest_event.dart';
-import 'package:quest_app/bloc/quest_state.dart';
-import 'package:quest_app/data/location_service.dart';
-import 'package:quest_app/presentation/dialogue_view.dart';
-import 'package:yandex_mapkit/yandex_mapkit.dart';
-
-
-
-// --- ВОТ НЕДОСТАЮЩИЙ ИМПОРТ ---
+import 'package:quest_app_new/bloc/quest_bloc.dart';
+import 'package:quest_app_new/bloc/quest_event.dart';
+import 'package:quest_app_new/bloc/quest_state.dart';
+import 'package:quest_app_new/data/location_service.dart';
+import 'package:quest_app_new/presentation/dialogue_view.dart';
 import 'package:quest_app_new/presentation/screens/profile_screen.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class QuestScreen extends StatefulWidget {
   const QuestScreen({super.key});
@@ -21,14 +17,26 @@ class QuestScreen extends StatefulWidget {
 
 class _QuestScreenState extends State<QuestScreen> {
   YandexMapController? _mapController;
-  // --- ИЗМЕНЕНИЕ 1: Переименовываем флаг для ясности ---
   bool _isUserLayerEnabled = false;
+
+  // --- ИЗМЕНЕНИЕ 1: Добавляем флаг готовности карты ---
+  bool _isMapComponentReady = false;
 
   @override
   void initState() {
     super.initState();
     _initPermissions();
-    context.read<QuestBloc>().add(const QuestLoadRequested('city_tour'));
+    context.read<QuestBloc>().add(const QuestLoadRequested(null));
+
+    // --- ИЗМЕНЕНИЕ 2: Добавляем искусственную задержку ---
+    // Даем нативной части время на инициализацию перед отрисовкой карты
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        setState(() {
+          _isMapComponentReady = true;
+        });
+      }
+    });
   }
 
   Future<void> _initPermissions() async {
@@ -36,7 +44,6 @@ class _QuestScreenState extends State<QuestScreen> {
     if (await locationService.handlePermission()) {
       if (mounted) {
         setState(() {
-          // --- ИЗМЕНЕНИЕ 2: Включаем флаг и пытаемся включить слой ---
           _isUserLayerEnabled = true;
           _mapController?.toggleUserLayer(visible: _isUserLayerEnabled);
         });
@@ -56,7 +63,6 @@ class _QuestScreenState extends State<QuestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // --- ВОЗВРАЩАЕМ КНОПКУ ---
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
@@ -77,7 +83,19 @@ class _QuestScreenState extends State<QuestScreen> {
         },
         builder: (context, state) {
           if (state is QuestCompleted) {
-            // ... без изменений
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Поздравляем!',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Text('Квест "${state.quest.questName}" пройден!',
+                      style: const TextStyle(fontSize: 18)),
+                ],
+              ),
+            );
           }
 
           if (state is QuestLoadInProgress || state is QuestInitial) {
@@ -85,13 +103,28 @@ class _QuestScreenState extends State<QuestScreen> {
           }
 
           if (state is QuestLoadFailure) {
-            return const Center(child: Text('Не удалось загрузить квест.'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Нет активных квестов.'),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      context
+                          .read<QuestBloc>()
+                          .add(const QuestLoadRequested('city_tour'));
+                    },
+                    child: const Text('Начать новый квест'),
+                  )
+                ],
+              ),
+            );
           }
 
           if (state is QuestLoadSuccess) {
             final checkpoint = state.currentCheckpoint;
             
-            // --- ИЗМЕНЕНИЕ 3: Создаем кастомную метку ---
             final placemark = PlacemarkMapObject(
               mapId: const MapObjectId('quest_placemark'),
               point: Point(
@@ -99,28 +132,32 @@ class _QuestScreenState extends State<QuestScreen> {
                   longitude: checkpoint.location.lon),
               icon: PlacemarkIcon.single(
                 PlacemarkIconStyle(
-                  // Используем путь к иконке из нашего JSON
                   image: BitmapDescriptor.fromAssetImage(checkpoint.markerIcon),
-                  scale: 0.7, // Можете настроить размер
+                  scale: 0.7,
                 ),
               ),
             );
 
             return Stack(
               children: [
-                YandexMap(
-                  onMapCreated: (controller) {
-                    _mapController = controller;
-                    // --- ИЗМЕНЕНИЕ 4: Включаем слой пользователя при создании карты ---
-                    _mapController?.toggleUserLayer(visible: _isUserLayerEnabled);
-                    
-                    final point = Point(
-                        latitude: checkpoint.location.lat,
-                        longitude: checkpoint.location.lon);
-                    _moveCameraTo(point);
-                  },
-                  mapObjects: [placemark], // Передаем нашу кастомную метку
-                ),
+                // --- ИЗМЕНЕНИЕ 3: Оборачиваем карту в условие ---
+                if (_isMapComponentReady)
+                  YandexMap(
+                    onMapCreated: (controller) {
+                      _mapController = controller;
+                      _mapController?.toggleUserLayer(visible: _isUserLayerEnabled);
+                      
+                      final point = Point(
+                          latitude: checkpoint.location.lat,
+                          longitude: checkpoint.location.lon);
+                      _moveCameraTo(point);
+                    },
+                    mapObjects: [placemark],
+                  )
+                else
+                  // Показываем заглушку, пока ждем
+                  const Center(child: CircularProgressIndicator()),
+
                 if (!state.isDialogueFinished)
                   GestureDetector(
                     onTap: () {

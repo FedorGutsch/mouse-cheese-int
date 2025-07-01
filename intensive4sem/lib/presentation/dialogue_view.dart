@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quest_app/bloc/quest_bloc.dart';
-import 'package:quest_app/bloc/quest_state.dart';
-import 'package:quest_app/data/models.dart';
-import 'package:quest_app/presentation/widgets/character_view.dart';
+import 'package:quest_app_new/bloc/quest_bloc.dart';
+import 'package:quest_app_new/bloc/quest_state.dart';
+import 'package:quest_app_new/data/models.dart';
+import 'package:quest_app_new/presentation/widgets/character_view.dart';
 
 class DialogueView extends StatefulWidget {
   final DialogueLine dialogueLine;
