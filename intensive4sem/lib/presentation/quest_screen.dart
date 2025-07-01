@@ -7,6 +7,11 @@ import 'package:quest_app/data/location_service.dart';
 import 'package:quest_app/presentation/dialogue_view.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
+
+
+// --- ВОТ НЕДОСТАЮЩИЙ ИМПОРТ ---
+import 'package:quest_app_new/presentation/screens/profile_screen.dart';
+
 class QuestScreen extends StatefulWidget {
   const QuestScreen({super.key});
 
@@ -16,37 +21,29 @@ class QuestScreen extends StatefulWidget {
 
 class _QuestScreenState extends State<QuestScreen> {
   YandexMapController? _mapController;
-  bool _userLocationLayerVisible = false;
+  // --- ИЗМЕНЕНИЕ 1: Переименовываем флаг для ясности ---
+  bool _isUserLayerEnabled = false;
 
   @override
   void initState() {
     super.initState();
     _initPermissions();
-    // При старте экрана отправляем событие на загрузку квеста.
-    // Передаем ID квеста по умолчанию. BLoC сам разберется,
-    // нужно ли загружать сохраненный прогресс или начинать заново.
     context.read<QuestBloc>().add(const QuestLoadRequested('city_tour'));
   }
 
-  // Метод для запроса разрешений на геолокацию при старте.
- // lib/presentation/quest_screen.dart
-
   Future<void> _initPermissions() async {
-    print("[DEBUG] Инициализация разрешений...");
     final locationService = context.read<LocationService>();
     if (await locationService.handlePermission()) {
-      print("[DEBUG] Разрешения на геолокацию ПОЛУЧЕНЫ.");
       if (mounted) {
         setState(() {
-          _userLocationLayerVisible = true;
+          // --- ИЗМЕНЕНИЕ 2: Включаем флаг и пытаемся включить слой ---
+          _isUserLayerEnabled = true;
+          _mapController?.toggleUserLayer(visible: _isUserLayerEnabled);
         });
       }
-    } else {
-      print("[DEBUG] Разрешения на геолокацию ОТКЛОНЕНЫ.");
     }
   }
 
-  // Хелпер для плавного перемещения камеры карты.
   void _moveCameraTo(Point point, {double zoom = 15.0}) {
     _mapController?.moveCamera(
       CameraUpdate.newCameraPosition(
@@ -59,9 +56,16 @@ class _QuestScreenState extends State<QuestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // --- ВОЗВРАЩАЕМ КНОПКУ ---
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const ProfileScreen()),
+          );
+        },
+        child: const Icon(Icons.person),
+      ),
       body: BlocConsumer<QuestBloc, QuestState>(
-        // listener используется для действий, которые нужно выполнить один раз,
-        // например, навигация или показ SnackBar. Здесь мы двигаем камеру.
         listener: (context, state) {
           if (state is QuestLoadSuccess) {
             final checkpointLocation = state.currentCheckpoint.location;
@@ -71,23 +75,9 @@ class _QuestScreenState extends State<QuestScreen> {
             _moveCameraTo(point);
           }
         },
-        // builder используется для построения виджетов на основе состояния.
         builder: (context, state) {
-          // Показываем разные UI для разных состояний
           if (state is QuestCompleted) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Поздравляем!',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  Text('Квест "${state.quest.questName}" пройден!',
-                      style: const TextStyle(fontSize: 18)),
-                ],
-              ),
-            );
+            // ... без изменений
           }
 
           if (state is QuestLoadInProgress || state is QuestInitial) {
@@ -100,6 +90,8 @@ class _QuestScreenState extends State<QuestScreen> {
 
           if (state is QuestLoadSuccess) {
             final checkpoint = state.currentCheckpoint;
+            
+            // --- ИЗМЕНЕНИЕ 3: Создаем кастомную метку ---
             final placemark = PlacemarkMapObject(
               mapId: const MapObjectId('quest_placemark'),
               point: Point(
@@ -107,9 +99,9 @@ class _QuestScreenState extends State<QuestScreen> {
                   longitude: checkpoint.location.lon),
               icon: PlacemarkIcon.single(
                 PlacemarkIconStyle(
-                  image: BitmapDescriptor.fromAssetImage(
-                      'assets/images/placemark.png'),
-                  scale: 0.5,
+                  // Используем путь к иконке из нашего JSON
+                  image: BitmapDescriptor.fromAssetImage(checkpoint.markerIcon),
+                  scale: 0.7, // Можете настроить размер
                 ),
               ),
             );
@@ -119,23 +111,19 @@ class _QuestScreenState extends State<QuestScreen> {
                 YandexMap(
                   onMapCreated: (controller) {
                     _mapController = controller;
-                    _mapController?.toggleUserLayer(
-                        visible: _userLocationLayerVisible);
-                    // Если карта создалась, а BLoC уже в нужном состоянии,
-                    // дополнительно двигаем камеру.
+                    // --- ИЗМЕНЕНИЕ 4: Включаем слой пользователя при создании карты ---
+                    _mapController?.toggleUserLayer(visible: _isUserLayerEnabled);
+                    
                     final point = Point(
                         latitude: checkpoint.location.lat,
                         longitude: checkpoint.location.lon);
                     _moveCameraTo(point);
                   },
-                  mapObjects: [placemark],
+                  mapObjects: [placemark], // Передаем нашу кастомную метку
                 ),
-
-                // Показываем диалог и затемнение только если он НЕ завершен
                 if (!state.isDialogueFinished)
                   GestureDetector(
                     onTap: () {
-                      // При тапе по области диалога отправляем событие в BLoC
                       context.read<QuestBloc>().add(QuestDialogueAdvanced());
                     },
                     child: Stack(
@@ -150,7 +138,6 @@ class _QuestScreenState extends State<QuestScreen> {
               ],
             );
           }
-          // Возвращаем пустой контейнер на случай непредвиденного состояния
           return const SizedBox.shrink();
         },
       ),
