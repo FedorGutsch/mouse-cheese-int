@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:quest_app/bloc/quest_event.dart';
-import 'package:quest_app/bloc/quest_state.dart';
-import 'package:quest_app/data/location_service.dart';
-import 'package:quest_app/data/progress_model.dart';
-import 'package:quest_app/data/progress_repository.dart';
-import 'package:quest_app/data/quest_repository.dart';
+import 'package:quest_app_new/bloc/quest_event.dart';
+import 'package:quest_app_new/bloc/quest_state.dart';
+import 'package:quest_app_new/data/location_service.dart';
+import 'package:quest_app_new/data/progress_repository.dart';
+import 'package:quest_app_new/data/quest_repository.dart';
 
-class QuestBloc extends Bloc<QuestEvent, QuestState> {
+class QuestBloc extends Bloc<QuestEvent, QuestState>{
   final QuestRepository questRepository;
   final LocationService locationService;
   final ProgressRepository progressRepository;
@@ -25,13 +24,11 @@ class QuestBloc extends Bloc<QuestEvent, QuestState> {
     on<QuestCheckpointReached>(_onQuestCheckpointReached);
   }
 
- @override
+  @override
   Future<void> close() {
     _positionSubscription?.cancel();
     return super.close();
   }
-
-  // lib/bloc/quest_bloc.dart
 
   Future<void> _onQuestLoadRequested(
     QuestLoadRequested event,
@@ -43,6 +40,7 @@ class QuestBloc extends Bloc<QuestEvent, QuestState> {
       final questToLoadId = event.questId ?? savedProgress?.currentQuestId;
 
       if (questToLoadId == null) {
+        // Нет ни нового, ни сохраненного квеста.
         emit(QuestLoadFailure());
         return;
       }
@@ -90,7 +88,6 @@ class QuestBloc extends Bloc<QuestEvent, QuestState> {
       } else {
         final newState = currentState.copyWith(isDialogueFinished: true);
         emit(newState);
-        // Сохранять не нужно, так как состояние не меняется, только флаг
         _startTracking(newState);
       }
     }
@@ -124,13 +121,10 @@ class QuestBloc extends Bloc<QuestEvent, QuestState> {
     }
   }
 
-  // lib/bloc/quest_bloc.dart
-
   void _startTracking(QuestLoadSuccess state) {
     print("[DEBUG] Вызван метод _startTracking. Начинаем слушать GPS.");
     _positionSubscription?.cancel();
     _positionSubscription = locationService.getPositionStream().listen((position) {
-      // Если вы видите это сообщение, значит GPS работает!
       print("[DEBUG] Получена новая позиция: ${position.latitude}, ${position.longitude}");
       
       final checkpoint = state.currentCheckpoint;

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:quest_app/data/models.dart';
+import 'package:quest_app_new/data/models.dart';
 
 // Абстрактный базовый класс для всех состояний.
 abstract class QuestState extends Equatable {
