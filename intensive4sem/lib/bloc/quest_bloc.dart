@@ -20,15 +20,13 @@ class QuestBloc extends Bloc<QuestEvent, QuestState> {
     required this.locationService,
     required this.progressRepository,
   }) : super(QuestInitial()) {
-    // Регистрация обработчиков для каждого события
     on<QuestLoadRequested>(_onQuestLoadRequested);
     on<QuestDialogueAdvanced>(_onQuestDialogueAdvanced);
     on<QuestCheckpointReached>(_onQuestCheckpointReached);
   }
 
-  @override
+ @override
   Future<void> close() {
-    // Важно отменять подписку при уничтожении BLoC, чтобы избежать утечек памяти
     _positionSubscription?.cancel();
     return super.close();
   }
@@ -41,8 +39,8 @@ class QuestBloc extends Bloc<QuestEvent, QuestState> {
   ) async {
     emit(QuestLoadInProgress());
     try {
-      QuestProgress? savedProgress = progressRepository.loadProgress();
-      String? questToLoadId = event.questId ?? savedProgress?.questId;
+      final savedProgress = progressRepository.loadCurrentQuestState();
+      final questToLoadId = event.questId ?? savedProgress?.currentQuestId;
 
       if (questToLoadId == null) {
         emit(QuestLoadFailure());
@@ -51,29 +49,21 @@ class QuestBloc extends Bloc<QuestEvent, QuestState> {
 
       final quest = await questRepository.getQuestById(questToLoadId);
 
-      if (savedProgress != null && savedProgress.questId == questToLoadId) {
-        // --- УЛУЧШЕННАЯ ЛОГИКА ---
-        // Определяем, был ли диалог завершен, на основе сохраненных данных
-        final checkpoint = quest.checkpoints[savedProgress.currentStep];
-        final bool isDialogueFinished =
-            savedProgress.currentDialogueIndex + 1 >= checkpoint.dialogue.length;
+      if (savedProgress != null && savedProgress.currentQuestId == questToLoadId) {
+        final checkpoint = quest.checkpoints[savedProgress.currentStep!];
+        final isDialogueFinished = (savedProgress.currentDialogueIndex! + 1) >= checkpoint.dialogue.length;
 
-        // Создаем состояние со всеми правильными параметрами
         final loadedState = QuestLoadSuccess(
           quest: quest,
-          currentStep: savedProgress.currentStep,
-          currentDialogueIndex: savedProgress.currentDialogueIndex,
+          currentStep: savedProgress.currentStep!,
+          currentDialogueIndex: savedProgress.currentDialogueIndex!,
           isDialogueFinished: isDialogueFinished,
         );
-        
         emit(loadedState);
-
-        // Если диалог был завершен, сразу начинаем отслеживание
         if (isDialogueFinished) {
           _startTracking(loadedState);
         }
       } else {
-        // Начинаем новый квест
         final initialState = QuestLoadSuccess(quest: quest);
         emit(initialState);
         _saveProgress(initialState);
@@ -94,14 +84,13 @@ class QuestBloc extends Bloc<QuestEvent, QuestState> {
       final nextDialogueIndex = currentState.currentDialogueIndex + 1;
 
       if (nextDialogueIndex < currentDialogue.length) {
-        final newState =
-            currentState.copyWith(currentDialogueIndex: nextDialogueIndex);
+        final newState = currentState.copyWith(currentDialogueIndex: nextDialogueIndex);
         emit(newState);
         _saveProgress(newState);
       } else {
         final newState = currentState.copyWith(isDialogueFinished: true);
         emit(newState);
-        _saveProgress(newState);
+        // Сохранять не нужно, так как состояние не меняется, только флаг
         _startTracking(newState);
       }
     }
@@ -127,8 +116,10 @@ class QuestBloc extends Bloc<QuestEvent, QuestState> {
         emit(newState);
         _saveProgress(newState);
       } else {
+        // Квест завершен!
+        progressRepository.addCompletedQuest(currentState.quest.questId);
+        progressRepository.clearCurrentQuestState();
         emit(QuestCompleted(quest: currentState.quest));
-        progressRepository.clearProgress();
       }
     }
   }
@@ -160,10 +151,10 @@ class QuestBloc extends Bloc<QuestEvent, QuestState> {
   }
 
   Future<void> _saveProgress(QuestLoadSuccess state) async {
-    final progress = QuestProgress()
-      ..questId = state.quest.questId
-      ..currentStep = state.currentStep
-      ..currentDialogueIndex = state.currentDialogueIndex;
-    await progressRepository.saveProgress(progress);
+    await progressRepository.saveCurrentQuestState(
+      state.quest.questId,
+      state.currentStep,
+      state.currentDialogueIndex,
+    );
   }
 }
