@@ -1,0 +1,783 @@
+{
+  "questId": "mouse_city_journey",
+  "questName": "Путешествие по Мышиному Городу",
+  "characters": {
+    "brinka": {
+      "poses": {
+        "neutral": "assets/images/brinka/brinka_neutral.png",
+        "happy": "assets/images/brinka/brinka_happy.png",
+        "sad": "assets/images/brinka/brinka_sad.png"
+      },
+      "blink_animation_frames": [
+
+        "assets/images/brinka/brinka_neutral.png",
+
+        "assets/images/brinka/brinka_neutral.png"
+
+      ]
+    },
+    "marusya": {
+      "poses": {
+        "neutral": "assets/images/marusya/marusya_neutral.png",
+        "happy": "assets/images/marusya/marusya_happy.png",
+        "sad": "assets/images/marusya/marusya_sad.png"
+      },
+      "blink_animation_frames": [
+
+        "assets/images/marusya/marusya_neutral.png",
+
+        "assets/images/marusya/marusya_neutral.png"
+
+      ]
+    },
+    "plumber_mouse": {
+      "poses": {
+        "neutral": "assets/images/plumber_mouse/plumber_mouse_neutral.png",
+        "happy": "assets/images/plumber_mouse/plumber_mouse_happy.png",
+        "sad": "assets/images/plumber_mouse/plumber_mouse_sad.png"
+      },
+      "blink_animation_frames": [
+
+        "assets/images/plumber_mouse/plumber_mouse_neutral.png",
+
+        "assets/images/plumber_mouse/plumber_mouse_neutral.png"
+
+      ]
+    },
+    "susanin_mouse": {
+      "poses": {
+        "neutral": "assets/images/susanin_mouse/susanin_mouse_neutral.png",
+        "happy": "assets/images/susanin_mouse/susanin_mouse_happy.png",
+        "sad": "assets/images/susanin_mouse/susanin_mouse_sad.png"
+      },
+      "blink_animation_frames": [
+
+        "assets/images/susanin_mouse/susanin_mouse_neutral.png",
+
+        "assets/images/susanin_mouse/susanin_mouse_neutral.png"
+
+      ]
+    },
+    "cat_mouse": {
+      "poses": {
+        "neutral": "assets/images/cat_mouse/cat_mouse_neutral.png",
+        "happy": "assets/images/cat_mouse/cat_mouse_happy.png",
+        "sad": "assets/images/cat_mouse/cat_mouse_sad.png"
+      },
+      "blink_animation_frames": [
+
+        "assets/images/cat_mouse/cat_mouse_neutral.png",
+
+        "assets/images/cat_mouse/cat_mouse_neutral.png"
+
+      ]
+    },
+    "snegurochka_mouse": {
+      "poses": {
+        "neutral": "assets/images/snegurochka_mouse/snegurochka_mouse_neutral.png",
+        "happy": "assets/images/snegurochka_mouse/snegurochka_mouse_happy.png",
+        "sad": "assets/images/snegurochka_mouse/snegurochka_mouse_sad.png"
+      },
+      "blink_animation_frames": [
+
+        "assets/images/snegurochka_mouse/snegurochka_mouse_neutral.png",
+
+        "assets/images/snegurochka_mouse/snegurochka_mouse_neutral.png"
+
+      ]
+    },
+    "chad_rat": {
+      "poses": {
+        "neutral": "assets/images/chad_rat/chad_rat_neutral.png",
+        "sad": "assets/images/chad_rat/chad_rat_sad.png",
+        "happy": "assets/images/chad_rat/chad_rat_happy.png"
+      },
+      "blink_animation_frames": [
+
+        "assets/images/chad_rat/chad_rat_neutral.png",
+
+        "assets/images/chad_rat/chad_rat_neutral.png"
+
+      ]
+    },
+    "dog_mouse": {
+      "poses": {
+        "neutral": "assets/images/dog_mouse/dog_mouse_neutral.png",
+        "happy": "assets/images/dog_mouse/dog_mouse_happy.png"
+      },
+      "blink_animation_frames": [
+
+        "assets/images/dog_mouse/dog_mouse_neutral.png",
+
+        "assets/images/dog_mouse/dog_mouse_neutral.png"
+
+      ]
+    },
+    "elephant_mouse": {
+      "poses": {
+        "neutral": "assets/images/elephant_mouse/elephant_mouse_neutral.png",
+        "happy": "assets/images/elephant_mouse/elephant_mouse_happy.png"
+      },
+      "blink_animation_frames": [
+
+        "assets/images/elephant_mouse/elephant_mouse_neutral.png",
+
+        "assets/images/elephant_mouse/elephant_mouse_neutral.png"
+
+      ]
+    }
+  },
+  "checkpoints": [
+    {
+      "step": 0,
+      "location": {
+        "lat": 57.733805,
+        "lon": 40.923238
+      },
+     
+      "triggerRadius": 4000,
+      "markerIcon": "assets/images/quest_marker.png",
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "sad",
+          "text": "Ох... Ох... Это ужасно! Совсем, совсем ужасно! Фестиваль сыра вот-вот начнется, а у меня... у меня... ВСЕ ПРОПАЛО!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "П-привет... Ты... ты не видел большую грязную крысу?"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "sad",
+          "text": "Это Чед... Он всегда смотрел на мою лавку и на моих друзей с такой злостью... А сегодня... пока я отвлеклась, украл ВСЮ мою коллекцию сыров для фестиваля! Всю! 'Утренняя Роса', 'Рокфор', 'Польский', 'Охотничий', 'Снежное Молоко', 'Псарный Дар', 'Розовые Сны'... Каждый сыр был особенным, для каждого друга! А теперь... теперь я не смогу угостить никого! И фестиваль испорчен!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Подожди... Ты выглядишь... надежным? Может... может ты поможешь мне? Мы еще можем успеть! Я знаю, где живут мои друзья, у них наверняка есть хоть немного их любимого сыра про запас. Если мы попросим у каждого по кусочку... может, соберем новую коллекцию? Пожалуйста! Без тебя я не справлюсь!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Первым делом пойдем к Марусе! Она добрая и наверняка поможет!"
+        }
+      ]
+    },
+    {
+      "step": 1,
+      
+      "location": { "lat": 55.7516, "lon": 37.6187 },
+      "triggerRadius": 4000000,
+      "markerIcon": "assets/images/quest_marker.png",
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Маруся! Привет! Нам очень нужна твоя помощь!"
+        },
+        {
+          "characterId": "marusya",
+          "characterName": "Маруся",
+          "pose": "neutral",
+          "text": "Му-у? Бринка? Ой, и друг твой! Что случилось? Ты же должна быть на фестивале готовиться!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "sad",
+          "text": "Чед... он украл ВСЕ мои сыры для фестиваля! Весь подарок друзьям! Мы пытаемся собрать хоть что-то взамен. У тебя не найдется кусочка 'Утренней Росы'? Я знаю, он твой самый любимый..."
+        },
+        {
+          "characterId": "marusya",
+          "characterName": "Маруся",
+          "pose": "sad",
+          "text": "Му-у-у! Бринка! Друг! Беда! Мой самый звонкий колокольчик с шеи пропал! Пока я дремала, кто-то его стащил... или он закатился? Он такой важен для меня! Он должен быть где-то совсем рядом, слышен по звону!"
+        },
+        {
+          "characterId": "marusya",
+          "characterName": "Маруся",
+          "pose": "neutral",
+          "text": "Поможешь поискать, друг Бринки? Найдешь – и я отдам вам кусочек сыра! Для фестиваля же!"
+        }
+      ]
+    },
+    {
+      "step": 2,
+      "location": {
+        "lat": 57.766,
+        "lon": 40.933
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Около артобъекта ЛЮБОВЬ!"
+        }
+      ]
+    },
+    {
+      "step": 3,
+      "location": {
+        "lat": 57.7625,
+        "lon": 40.9303
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "marusya",
+          "characterName": "Маруся",
+          "pose": "happy",
+          "text": "Мой колокольчик! Му-у-ра! Ты нашел его! Вот он, мой голос! Спасибо тебе огромное! Теперь я снова целая! И настроение вернулось! Держи, пожалуйста! Вот мой любимый 'Утренняя Роса' – свежий, нежный, пахнет росой и счастьем! Пусть он поможет спасти фестиваль! И спасибо, что помог мне здесь, у 'ЛЮБВИ' – это хороший знак!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Спасибо, Маруся! И колокольчик твой чудесно звенит, и сыр восхитителен! Удачи тебе!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Отлично! Первый сыр найден у самой 'ЛЮБВИ'! Теперь к Водопроводчику, у него наверняка что-то серьезное случилось с трубами или инструментами."
+        }
+      ]
+    },
+    {
+      "step": 4,
+      "location": {
+        "lat": 57.763655,
+        "lon": 40.944402
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Привет, Водопроводчик! Как дела? Помоги, пожалуйста, беда приключилась!"
+        },
+        {
+          "characterId": "plumber_mouse",
+          "characterName": "Водопроводчик Мышь",
+          "pose": "neutral",
+          "text": "О, Бринка и друг! Дела? Да вот, кран тут подтекает... А что у вас?"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "sad",
+          "text": "...и мы собираем сыры снова. У тебя случайно нет кусочка твоего любимого 'Рокфора'? Он такой плотный, идеален для нарезки..."
+        },
+        {
+          "characterId": "plumber_mouse",
+          "characterName": "Водопроводчик Мышь",
+          "pose": "sad",
+          "text": "Эх, Бринка, друг! Не до фестиваля! Гаечный ключ мой главный куда-то запропастился! Без него эту проклятую задвижку не подтянуть – сейчас как хлебанет! Я точно оставил его тут, рядом с люком, когда лез проверять... Может, в траву упал, может, в лужу скатился? Поможешь найти? Без ключа я – не водопроводчик!"
+        }
+      ]
+    },
+    {
+      "step": 5,
+      "location": {
+        "lat": 57.7641,
+        "lon": 40.9439
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Ключ должен быть у старинной водопроводной колонки!"
+        }
+      ]
+    },
+    {
+      "step": 6,
+      "location": {
+        "lat": 57.763655,
+        "lon": 40.944402
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "plumber_mouse",
+          "characterName": "Водопроводчик Мышь",
+          "pose": "happy",
+          "text": "Вот он, старина! Сейчас как дам по этой гайке! Спасибо, выручил! Без тебя фестиваль могло затопить! Держи 'Рокфора' – крепкий сыр для крепких гаек!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Уф, пронесло! Спасибо за сыр и за спасение труб!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Еще один сыр! Теперь к Ивану Сусанину, он, кажется, карту потерял..."
+        }
+      ]
+    },
+    {
+      "step": 7,
+      "location": {
+        "lat": 57.766976,
+        "lon": 40.924758
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Иван Сусанин! Здравствуй! Нам нужен твой совет... и помощь!"
+        },
+        {
+          "characterId": "susanin_mouse",
+          "characterName": "Иван Сусанин Мышь",
+          "pose": "sad",
+          "text": "Псссст! Тише, тише! Кто идет? А, Бринка и спутник... Что случилось? Вы не видели Кота-Мыша? Он тут рыскает!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "sad",
+          "text": "...ищем сыры. У тебя не завалялся кусочек 'Боярского'? Ты же его обожаешь..."
+        },
+        {
+          "characterId": "susanin_mouse",
+          "characterName": "Иван Сусанин Мышь",
+          "pose": "sad",
+          "text": "Псссст! Тише! Бринка, спутник! Беда великая! Моя старинная карта окрестностей пропала! Без нее я – не Сусанин, а заблудившийся мышонок! Я ее тут, у памятника, изучал, как мышей от Кота вести... А теперь и след простыл! И Кот, окаянный, чует, чует мою беспомощность! Поможешь отыскать карту? Она должна быть тут, свернута в трубочку!"
+        }
+      ]
+    },
+    {
+      "step": 8,
+      "location": {
+        "lat": 57.775425,
+        "lon": 40.889506
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Карта должна быть у Музея деревянного зодчества!"
+        }
+      ]
+    },
+    {
+      "step": 9,
+      "location": {
+        "lat": 57.766976,
+        "lon": 40.924758
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "susanin_mouse",
+          "characterName": "Иван Сусанин Мышь",
+          "pose": "happy",
+          "text": "Слава богу! Карта моя верная! Теперь хоть в тридевятое царство проведу! Спасибо, добрый человек! Вот тебе 'Боярского' сыру – сытен и благороден, как боярин!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Спасибо, Иван Сусанин! Пусть карта всегда ведет тебя верно!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Отлично! Карта найдена, сыр есть! Теперь к Коту-Мышу... Ох, это будет непросто."
+        }
+      ]
+    },
+    {
+      "step": 10,
+      "location": {
+        "lat": 57.767449,
+        "lon": 40.925813
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Э-э-э, привет, Кот-Мышь..."
+        },
+        {
+          "characterId": "cat_mouse",
+          "characterName": "Кот-Мышь",
+          "pose": "neutral",
+          "text": "Мяу-мяф! Бринка? И кто это с тобой? Новый друг? Или... добыча?"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "sad",
+          "text": "...и мы собираем сыры. Ты... ты не поделишься кусочком 'Охотничьего'? Он такой пикантный..."
+        },
+        {
+          "characterId": "cat_mouse",
+          "characterName": "Кот-Мышь",
+          "pose": "sad",
+          "text": "Мяу-мяф! Бринка! И кто это? Новый мыш... друг? Ха! Видишь, я тут тренируюсь быть грозным Котом! Но беда: мой клубок ниток потерялся! Без него я – не кот, а так, мышь в пижаме! Я его точно тут где-то ронял... под кустом, у памятника... Поможешь найти? Найдешь – сыром угощу! Не найдешь... может, и твои клубки поиграют? Мяу-ха-ха!"
+        }
+      ]
+    },
+    {
+      "step": 11,
+      "location": {
+        "lat": 57.76786,
+        "lon": 40.926974
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Клубок должен быть у Памятника собаке!"
+        }
+      ]
+    },
+    {
+      "step": 12,
+      "location": {
+        "lat": 57.767449,
+        "lon": 40.925813
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "cat_mouse",
+          "characterName": "Кот-Мышь",
+          "pose": "happy",
+          "text": "Мяу! Мой клубок ниток! Теперь я снова счастлив! Ладно, держи 'Охотничий' – пикантный, как моя охота! Заходи еще... поиграем!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Фух... Спасибо, Кот-Мышь."
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Уф, пронесло! Теперь к Снегурочке, у нее наверняка что-то волшебное потерялось."
+        }
+      ]
+    },
+    {
+      "step": 13,
+      "location": {
+        "lat": 57.755016,
+        "lon": 40.951166
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Снегурочка! Привет! Помоги нам, пожалуйста, волшебством!"
+        },
+        {
+          "characterId": "snegurochka_mouse",
+          "characterName": "Снегурочка Мышь",
+          "pose": "neutral",
+          "text": "О, Бринка! И спутник твой! Что привело вас в мои снежные владения? Ой, ты вся расстроена?"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "sad",
+          "text": "...нам очень нужен кусочек 'Снежного Молока', чтобы коллекция была полной. Оно же такое нежное, как первый снег..."
+        },
+        {
+          "characterId": "snegurochka_mouse",
+          "characterName": "Снегурочка Мышь",
+          "pose": "sad",
+          "text": "О, путники! Помогите волшебству случиться! Я потеряла свой волшебный ледяной кристалл! Без него мои загадки теряют силу, а снежинки не танцуют! Я загадала ему три загадки, и он скрылся! Чтобы он снова явился, нужно отгадать загадки и найти место его сияния! Оно должно быть где-то в фонтане."
+        }
+      ]
+    },
+    {
+      "step": 14,
+      "location": {
+        "lat": 57.768072,
+        "lon": 40.927155
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Кристалл должен быть в фонтане на Сусанинской площади!"
+        }
+      ]
+    },
+    {
+      "step": 15,
+      "location": {
+        "lat": 57.755016,
+        "lon": 40.951166
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "snegurochka_mouse",
+          "characterName": "Снегурочка Мышь",
+          "pose": "neutral",
+          "text": "Молодцы. А теперь отгадайте мои загадки!"
+        },
+        {
+          "characterId": "snegurochka_mouse",
+          "characterName": "Снегурочка Мышь",
+          "pose": "sad",
+          "text": "Без окон, без дверей, полна горница людей? (Ответ: Сыр). Серенькая шубка, остренькие зубки, длинненький хвостик? (Ответ: Мышь)."
+        },
+        {
+          "characterId": "snegurochka_mouse",
+          "characterName": "Снегурочка Мышь",
+          "pose": "sad",
+          "text": "Черная, блестящая, на ней блины шкворчат? (Ответ: Сковорода)"
+        },
+        {
+          "characterId": "snegurochka_mouse",
+          "characterName": "Снегурочка Мышь",
+          "pose": "happy",
+          "text": "Чудеса! Ты разгадал тайны и вернул кристалл! Морозная радость! Прими 'Снежное Молоко' – нежное, как первый снег!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Спасибо, Снегурочка! Твое волшебство сработало!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Волшебный сыр! Осталось совсем немного! К Собаке-Мыши!"
+        }
+      ]
+    },
+    {
+      "step": 16,
+      "location": {
+        "lat": 57.767449,
+        "lon": 40.925813
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Собака-Мышь! Эй! Что ты роешь?"
+        },
+        {
+          "characterId": "dog_mouse",
+          "characterName": "Собака Мышь",
+          "pose": "neutral",
+          "text": "Гав-gaв! Бринка! Друг! Помоги! Я закопал(а) свою любимую игрушечную косточку! Самую крепкую и хрустящую! Хотел(а) сберечь от ворон... а теперь забыл(а) где! Она где-то тут, на этой полянке! Без нее играть неинтересно! Найдешь – сыром угощу!"
+        }
+      ]
+    },
+    {
+      "step": 17,
+      "location": {
+        "lat": 57.76735,
+        "lon": 40.9262
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Косточка должна быть у Памятника Юрию Долгорукому!"
+        }
+      ]
+    },
+    {
+      "step": 18,
+      "location": {
+        "lat": 57.767449,
+        "lon": 40.925813
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "dog_mouse",
+          "characterName": "Собака Мышь",
+          "pose": "happy",
+          "text": "Гав! Моя косточка! Ура! Ты лучший друг! Держи 'Псарный Дар' – вкусный, как... как косточка! Ну, почти!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Ура! Коллекция почти собрана! Но... нам еще нужно заручиться удачей! К Слону!"
+        }
+      ]
+    },
+    {
+      "step": 19,
+      "location": {
+        "lat": 57.768112,
+        "lon": 40.926949
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Слон! Слон! Мы собрали почти все! Почти все сыры! Фестиваль спасен!"
+        },
+        {
+          "characterId": "elephant_mouse",
+          "characterName": "Слон Мышь",
+          "pose": "neutral",
+          "text": "Ох... Это чудесно, Бринка... Рад за тебя..."
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Что случилось? Ты же обычно такой веселый?"
+        },
+        {
+          "characterId": "elephant_mouse",
+          "characterName": "Слон Мышь",
+          "pose": "neutral",
+          "text": "Ох... Рад, что вы собрали почти все сыры... А у меня... моя любимая розовая ленточка для хобота потерялась... Без нее мой наряд неполный, не такой нарядный для фестиваля. Я ее тут, рядом, повязывал... а теперь и след простыл. Может, ветер унес? Поможешь поискать? Она ярко-розовая!"
+        }
+      ]
+    },
+    {
+      "step": 20,
+      "location": {
+        "lat": 57.771217,
+        "lon": 40.927236
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Ленточка должна быть на детской площадке!"
+        }
+      ]
+    },
+    {
+      "step": 21,
+      "location": {
+        "lat": 57.768112,
+        "lon": 40.926949
+      },
+      "triggerRadius": 50,
+      "dialogue": [
+        {
+          "characterId": "elephant_mouse",
+          "characterName": "Слон Мышь",
+          "pose": "happy",
+          "text": "Моя ленточка! Спасибо! Теперь я самый нарядный слон! Вы сегодня стольким помогли! Примите 'Розовые Сны' – пусть удача будет с вами яркой, как эта лента!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Спасибо, Слон! Ты чудесный! Бежим на фестиваль!"
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Время на исходе! Бежим на фестивальную площадь!"
+        }
+      ]
+    },
+    {
+      "step": 22,
+      "location": {
+        "lat": 57.766,
+        "lon": 40.933
+      },
+      "triggerRadius": 100,
+      "dialogue": [
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Мы сделали это! Благодаря тебе, Фестиваль Сыра спасен!"
+        },
+        {
+          "characterId": "chad_rat",
+          "characterName": "Крыса Чед",
+          "pose": "happy",
+          "text": "Я... я не знаю, что на меня нашло... Мне просто было так... одиноко. И обидно. Я завидовал вам всем, вашей дружбе, вашему празднику. Простите меня. Я не хотел портить Фестиваль. Я просто хотел, чтобы меня... заметили. Хоть как-нибудь."
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Прощать – это важно, Чед. Особенно когда понимаешь, что человек (или крыса) на самом деле добрый. Когда ты добрый, честный, когда ты готов помочь, а не отнять. Когда ты просто... ты."
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "neutral",
+          "text": "Я прощаю тебя за сыр, Чед. Это всего лишь сыр. Его можно найти, купить, собрать заново. А вот дружба... Она важнее любой головки самого дорогого сыра на свете. Она бесценна."
+        },
+        {
+          "characterId": "chad_rat",
+          "characterName": "Крыса Чед",
+          "pose": "sad",
+          "text": "П-правда? Ты... прощаешь? И... и я... я могу... попробовать? Попробовать быть... другом?"
+        },
+        {
+          "characterId": "marusya",
+          "characterName": "Маруся",
+          "pose": "neutral",
+          "text": "Му-у... Все заслуживают второго шанса, правда?"
+        },
+        {
+          "characterId": "plumber_mouse",
+          "characterName": "Водопроводчик Мышь",
+          "pose": "neutral",
+          "text": "Главное – честность. Призналась – молодец."
+        },
+        {
+          "characterId": "brinka",
+          "characterName": "Бринка",
+          "pose": "happy",
+          "text": "Конечно можешь! Иди к нам! Помоги раздавать угощения! И угостись сам – ты ведь тоже любишь сыр, да? Возьми свой самый любимый и угости нас!"
+        }
+      ]
+    }
+  ]
+}
