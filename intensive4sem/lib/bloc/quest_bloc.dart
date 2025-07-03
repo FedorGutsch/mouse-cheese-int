@@ -1,36 +1,47 @@
+// lib/bloc/quest_bloc.dart
+
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:quest_app_new/bloc/quest_event.dart';
 import 'package:quest_app_new/bloc/quest_state.dart';
+import 'package:quest_app_new/data/effects_service.dart';
 import 'package:quest_app_new/data/location_service.dart';
 import 'package:quest_app_new/data/progress_repository.dart';
 import 'package:quest_app_new/data/quest_repository.dart';
+import 'package:quest_app_new/data/models.dart';
 
 class QuestBloc extends Bloc<QuestEvent, QuestState>{
   final QuestRepository questRepository;
   final LocationService locationService;
   final ProgressRepository progressRepository;
+  final EffectsService effectsService;
 
-  StreamSubscription<Position>? _positionSubscription;
+  // --- ИСПРАВЛЕНИЕ: ПРАВИЛЬНОЕ ИМЯ ПЕРЕМЕННОЙ ---
+  StreamSubscription<LocationStatus>? _locationStatusSubscription;
 
   QuestBloc({
     required this.questRepository,
     required this.locationService,
     required this.progressRepository,
+    required this.effectsService,
   }) : super(QuestInitial()) {
     on<QuestLoadRequested>(_onQuestLoadRequested);
     on<QuestDialogueAdvanced>(_onQuestDialogueAdvanced);
     on<QuestCheckpointReached>(_onQuestCheckpointReached);
+    // --- ИСПРАВЛЕНИЕ: ИСПОЛЬЗУЕМ ПУБЛИЧНОЕ ИМЯ СОБЫТИЯ ---
+    on<LocationStatusChanged>(_onLocationStatusChanged);
+    on<RetryLocationPermission>(_onRetryLocationPermission);
   }
 
   @override
   Future<void> close() {
-    _positionSubscription?.cancel();
+    // --- ИСПРАВЛЕНИЕ: ПРАВИЛЬНОЕ ИМЯ ПЕРЕМЕННОЙ ---
+    _locationStatusSubscription?.cancel();
     return super.close();
   }
 
-  Future<void> _onQuestLoadRequested(
+  void _onQuestLoadRequested(
     QuestLoadRequested event,
     Emitter<QuestState> emit,
   ) async {
@@ -40,7 +51,6 @@ class QuestBloc extends Bloc<QuestEvent, QuestState>{
       final questToLoadId = event.questId ?? savedProgress?.currentQuestId;
 
       if (questToLoadId == null) {
-        // Нет ни нового, ни сохраненного квеста.
         emit(QuestLoadFailure());
         return;
       }
@@ -99,8 +109,10 @@ class QuestBloc extends Bloc<QuestEvent, QuestState>{
   ) {
     final currentState = state;
     if (currentState is QuestLoadSuccess) {
-      _positionSubscription?.cancel();
-      _positionSubscription = null;
+      effectsService.playCheckpointComplete();
+      
+      _locationStatusSubscription?.cancel();
+      _locationStatusSubscription = null;
 
       final nextStep = currentState.currentStep + 1;
 
@@ -113,8 +125,12 @@ class QuestBloc extends Bloc<QuestEvent, QuestState>{
         emit(newState);
         _saveProgress(newState);
       } else {
-        // Квест завершен!
-        progressRepository.addCompletedQuest(currentState.quest.questId);
+        final quest = currentState.quest;
+        final allDialogues = quest.checkpoints
+            .expand((checkpoint) => checkpoint.dialogue)
+            .toList();
+        
+        progressRepository.addCompletedQuest(quest.questId, allDialogues);
         progressRepository.clearCurrentQuestState();
         emit(QuestCompleted(quest: currentState.quest));
       }
@@ -122,28 +138,65 @@ class QuestBloc extends Bloc<QuestEvent, QuestState>{
   }
 
   void _startTracking(QuestLoadSuccess state) {
-    print("[DEBUG] Вызван метод _startTracking. Начинаем слушать GPS.");
-    _positionSubscription?.cancel();
-    _positionSubscription = locationService.getPositionStream().listen((position) {
-      print("[DEBUG] Получена новая позиция: ${position.latitude}, ${position.longitude}");
-      
-      final checkpoint = state.currentCheckpoint;
-      final distance = locationService.getDistance(
-        position.latitude,
-        position.longitude,
-        checkpoint.location.lat,
-        checkpoint.location.lon,
-      );
-
-      print('[DEBUG] Дистанция до чекпоинта: $distance метров');
-
-      if (distance <= checkpoint.triggerRadius) {
-        print("[DEBUG] Игрок достиг цели! Отправляем событие QuestCheckpointReached.");
-        add(QuestCheckpointReached());
-      }
+    print("[DEBUG] Вызван метод _startTracking. Начинаем слушать статус геолокации.");
+    _locationStatusSubscription?.cancel();
+    _locationStatusSubscription = locationService.getLocationStatusStream().listen((status) {
+      add(LocationStatusChanged(status));
     });
   }
 
+  // --- ИСПРАВЛЕНИЕ: ИСПОЛЬЗУЕМ ПУБЛИЧНОЕ ИМЯ СОБЫТИЯ ---
+  void _onLocationStatusChanged(LocationStatusChanged event, Emitter<QuestState> emit) {
+    final currentState = state;
+    if (currentState is QuestLoadSuccess) {
+      switch (event.status.type) {
+        case LocationStatusType.hasPosition:
+          final position = event.status.position!;
+          print("[DEBUG] Получена новая позиция: ${position.latitude}, ${position.longitude}");
+          
+          final checkpoint = currentState.currentCheckpoint;
+          final distance = locationService.getDistance(
+            position.latitude,
+            position.longitude,
+            checkpoint.location.lat,
+            checkpoint.location.lon,
+          );
+
+          print('[DEBUG] Дистанция до чекпоинта: $distance метров');
+
+          if (distance <= checkpoint.triggerRadius) {
+            print("[DEBUG] Игрок достиг цели! Отправляем событие QuestCheckpointReached.");
+            add(QuestCheckpointReached());
+          }
+          break;
+        case LocationStatusType.serviceDisabled:
+          emit(QuestLocationServiceDisabled(quest: currentState.quest, currentStep: currentState.currentStep));
+          break;
+        case LocationStatusType.permissionDenied:
+        case LocationStatusType.permissionPermanentlyDenied:
+          emit(QuestLocationPermissionDenied(quest: currentState.quest, currentStep: currentState.currentStep));
+          break;
+      }
+    }
+  }
+
+  Future<void> _onRetryLocationPermission(RetryLocationPermission event, Emitter<QuestState> emit) async {
+    final permission = await locationService.requestPermission();
+    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+      final currentState = state;
+      if (currentState is QuestLoadSuccess) {
+        final newState = QuestLoadSuccess(
+          quest: currentState.quest,
+          currentStep: currentState.currentStep,
+          currentDialogueIndex: currentState.currentDialogueIndex,
+          isDialogueFinished: true,
+        );
+        emit(newState);
+        _startTracking(newState);
+      }
+    }
+  }
+  
   Future<void> _saveProgress(QuestLoadSuccess state) async {
     await progressRepository.saveCurrentQuestState(
       state.quest.questId,

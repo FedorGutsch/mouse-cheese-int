@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:quest_app_new/data/location_service.dart';
 
 // Абстрактный базовый класс для всех событий.
 // Equatable используется для удобного сравнения объектов.
@@ -29,3 +30,14 @@ class QuestDialogueAdvanced extends QuestEvent {}
 /// Вызывается внутренне, когда LocationService определяет, что
 /// дистанция до цели меньше радиуса триггера.
 class QuestCheckpointReached extends QuestEvent {}
+
+class LocationStatusChanged extends QuestEvent {
+  final LocationStatus status;
+  const LocationStatusChanged(this.status);
+
+  @override
+  List<Object?> get props => [status];
+}
+
+/// Событие от UI, которое просит BLoC повторить попытку получения разрешений.
+class RetryLocationPermission extends QuestEvent {}
