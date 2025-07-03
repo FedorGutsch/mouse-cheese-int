@@ -1,36 +1,73 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:quest_app/data/progress_model.dart';
+import 'package:quest_app_new/data/progress_model.dart';
+import 'package:quest_app_new/data/models.dart';
 
 class ProgressRepository {
-  // Имя "коробки" (таблицы) в Hive
   static const _progressBoxName = 'progressBox';
-  // Ключ, по которому будет храниться единственный объект с прогрессом
-  static const _currentProgressKey = 'currentProgress';
+  static const _progressKey = 'userProgress';
 
-  // Метод для инициализации. Открывает "коробку" для хранения данных.
   Future<void> init() async {
-    // Регистрируем адаптер перед открытием коробки, если это не сделано в main
     if (!Hive.isAdapterRegistered(QuestProgressAdapter().typeId)) {
       Hive.registerAdapter(QuestProgressAdapter());
     }
     await Hive.openBox<QuestProgress>(_progressBoxName);
   }
 
-  // Приватный геттер для удобного доступа к открытой коробке
   Box<QuestProgress> get _progressBox => Hive.box<QuestProgress>(_progressBoxName);
 
-  // Сохраняем текущий прогресс
-  Future<void> saveProgress(QuestProgress progress) async {
-    await _progressBox.put(_currentProgressKey, progress);
+  QuestProgress _getOrCreateProgress() {
+    return _progressBox.get(_progressKey) ?? QuestProgress();
   }
 
-  // Загружаем прогресс. Может вернуть null, если ничего не сохранено.
-  QuestProgress? loadProgress() {
-    return _progressBox.get(_currentProgressKey);
+  Future<void> _saveProgress(QuestProgress progress) async {
+    await _progressBox.put(_progressKey, progress);
   }
 
-  // Очищаем прогресс (например, после завершения квеста)
-  Future<void> clearProgress() async {
-    await _progressBox.delete(_currentProgressKey);
+  Future<void> saveCurrentQuestState(String questId, int step, int dialogueIndex) async {
+    final progress = _getOrCreateProgress();
+    progress.currentQuestId = questId;
+    progress.currentStep = step;
+    progress.currentDialogueIndex = dialogueIndex;
+    await _saveProgress(progress);
+  }
+
+  QuestProgress? loadCurrentQuestState() {
+    final progress = _progressBox.get(_progressKey);
+    if (progress != null && progress.currentQuestId != null) {
+      return progress;
+    }
+    return null;
+  }
+
+  Future<void> clearCurrentQuestState() async {
+    final progress = _getOrCreateProgress();
+    progress.currentQuestId = null;
+    progress.currentStep = null;
+    progress.currentDialogueIndex = null;
+    await _saveProgress(progress);
+  }
+
+  Future<void> addCompletedQuest(String questId, List<DialogueLine> dialogues) async {
+    final progress = _getOrCreateProgress();
+    if (!progress.completedQuests.contains(questId)) {
+      progress.completedQuests.add(questId);
+      // Конвертируем диалоги в JSON и сохраняем
+      progress.dialogueHistory[questId] = dialogues.map((d) => d.toJson()).toList();
+    }
+    await _saveProgress(progress);
+  }
+
+  Future<void> saveAvatar(String avatarPath) async {
+    final progress = _getOrCreateProgress();
+    progress.avatarPath = avatarPath;
+    await _saveProgress(progress);
+  }
+
+  QuestProgress? loadUserProfile() {
+    return _progressBox.get(_progressKey);
+  }
+  Future<void> resetProgress() async {
+    final progress = QuestProgress(); // Создаем пустой объект прогресса
+    await _saveProgress(progress);
   }
 }
